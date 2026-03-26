@@ -1,0 +1,24 @@
+{
+  "name": "chatbot",
+  "version": "1.0.0",
+  "description": "\"# chatbot\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"cd backend && venv\\Scripts\\python -m uvicorn app.main:app --reload\" \"cd frontend && npm run dev\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anujaraired/chatbot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anujaraired/chatbot/issues"
+  },
+  "homepage": "https://github.com/anujaraired/chatbot#readme",
+  "dependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

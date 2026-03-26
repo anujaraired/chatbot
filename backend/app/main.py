@@ -1,40 +1,20 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
+from app.routes.chat import router as chat_router
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-# Model (data structure)
-class Item(BaseModel):
-    name: str
-    price: int
+# CORS (IMPORTANT for frontend connection)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # later restrict
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-# Fake DB
-items = []
+app.include_router(chat_router, prefix="/chat")
 
-# CREATE
-@app.post("/items")
-def create_item(item: Item):
-    items.append(item)
-    return {"message": "Item added", "data": item}
-
-# READ ALL
-@app.get("/items")
-def get_items():
-    return items
-
-# READ ONE
-@app.get("/items/{item_id}")
-def get_item(item_id: int):
-    return items[item_id]
-
-# UPDATE
-@app.put("/items/{item_id}")
-def update_item(item_id: int, item: Item):
-    items[item_id] = item
-    return {"message": "Item updated", "data": item}
-
-# DELETE
-@app.delete("/items/{item_id}")
-def delete_item(item_id: int):
-    deleted = items.pop(item_id)
-    return {"message": "Item deleted", "data": deleted}
+@app.get("/")
+def home():
+    return {"message": "Backend running 🚀"}
