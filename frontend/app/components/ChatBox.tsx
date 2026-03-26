@@ -1,5 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export default function ChatBox() {
   const [messages, setMessages] = useState<any[]>([]);
@@ -34,9 +36,9 @@ export default function ChatBox() {
   }, [messages]);
 
   return (
-    <div className="flex h-[30rem] w-[20rem] flex-col bg-[#ffffff] shadow-xl rounded-[1rem]">
+    <div className="flex h-[40rem] w-[30rem] flex-col bg-[#ffffff] shadow-xl rounded-[1rem]">
       {/* Header */}
-      <div className="flex items-center gap-3 bg-[#1B5A96] px-4 py-3 text-white shadow rounded-t-[1rem]">
+      <div className="flex items-center gap-3 bg-[#1B5A96] px-[1.5rem] py-[1rem] text-white shadow rounded-t-[1rem]">
         <div className="h-10 w-10 rounded-full bg-white text-[#1B5A96] flex items-center justify-center font-bold">
           A
         </div>
@@ -47,7 +49,7 @@ export default function ChatBox() {
       </div>
 
       {/* Chat Area */}
-      <div className="flex-1 overflow-y-auto hide-scrollbar px-4 py-4">
+      <div className="flex-1 overflow-y-auto hide-scrollbar px-[1.5rem] py-[1rem]">
         {messages.map((msg, i) => (
           <div
             key={i}
@@ -56,13 +58,56 @@ export default function ChatBox() {
             }`}
           >
             <div
-              className={`max-w-[75%] rounded-2xl px-4 py-2 text-sm shadow ${
+              className={`max-w-[85%] rounded-2xl px-4 py-2 text-sm shadow ${
                 msg.sender === "user"
                   ? "bg-[#1B5A96] text-white rounded-br-none"
                   : "bg-white text-gray-800 rounded-bl-none"
               }`}
             >
-              {msg.text}
+              <div className="overflow-x-auto">
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    h1: ({ node, ...props }) => (
+                      <h1 className="text-lg font-bold mb-2" {...props} />
+                    ),
+                    h2: ({ node, ...props }) => (
+                      <h2 className="text-md font-semibold mb-2" {...props} />
+                    ),
+                    p: ({ node, ...props }) => (
+                      <p className="mb-2 leading-relaxed" {...props} />
+                    ),
+                    li: ({ node, ...props }) => (
+                      <li className="ml-4 list-disc mb-1" {...props} />
+                    ),
+                    strong: ({ node, ...props }) => (
+                      <strong className="font-semibold" {...props} />
+                    ),
+
+                    // ✅ TABLE SUPPORT
+                    table: ({ node, ...props }) => (
+                      <table
+                        className="w-full border border-gray-300 my-2 text-sm"
+                        {...props}
+                      />
+                    ),
+                    th: ({ node, ...props }) => (
+                      <th
+                        className="border px-2 py-1 bg-gray-100 text-left"
+                        {...props}
+                      />
+                    ),
+                    td: ({ node, ...props }) => (
+                      <td className="border px-2 py-1" {...props} />
+                    ),
+                    tr: ({ node, ...props }) => (
+                      <tr className="border-b" {...props} />
+                    ),
+                  }}
+                >
+                  {msg.text}
+                </ReactMarkdown>
+              </div>
             </div>
           </div>
         ))}
